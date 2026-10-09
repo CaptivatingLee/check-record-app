@@ -1,0 +1,30 @@
+name: Build Liji iOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Build unsigned IPA
+        run: bash build.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Liji-unsigned-IPA
+          path: output/Liji-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30
